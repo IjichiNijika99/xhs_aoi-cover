@@ -1,0 +1,12 @@
+# 本地测试与截图产物，不需要部署
+tools/shots/
+tools/downloads/
+_tmp_font/
+
+# 系统与编辑器杂项
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.log

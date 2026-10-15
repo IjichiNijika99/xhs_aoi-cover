@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>番剧封面工坊 · 小红书吐槽图生成器</title>
+<meta name="description" content="从 Bangumi 番组计划取番剧海报，套用多种主题包装成小红书竖版图，可自定义评分与角标文案。">
+<link rel="stylesheet" href="fonts/smiley.css">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">🎬</span>
+    <div>
+      <h1>番剧封面工坊</h1>
+      <p>Bangumi 海报 → 小红书吐槽图</p>
+    </div>
+  </div>
+  <button id="btnExportTop" class="primary">导出图片</button>
+</header>
+
+<main class="layout">
+
+  <!-- ============ 左栏：选项 ============ -->
+  <aside class="panel" id="panel">
+
+    <!-- 1. 选番 -->
+    <section class="card" data-card="1">
+      <h2 class="card-head" data-card="1"><i>1</i>选番剧<button type="button" class="card-toggle" aria-label="展开或收起"></button></h2>
+      <div class="search-row">
+        <input id="q" type="search" placeholder="输入番名，如：葬送的芙莉莲" autocomplete="off" enterkeyhint="search">
+        <button id="btnSearch" class="ghost">搜索</button>
+      </div>
+      <div class="row-inline">
+        <input id="bgmId" type="text" inputmode="numeric" placeholder="或直接填 Bangumi 条目 ID">
+        <button id="btnLoadId" class="ghost">读取</button>
+      </div>
+      <p class="hint" id="searchStatus">在 Bangumi 上按番名搜索，选中后自动填好标题、年份、评分与原图。</p>
+      <div id="results" class="results"></div>
+      <div id="subjectCard" class="subject-card" hidden></div>
+
+      <label class="drop" id="drop">
+        <input type="file" id="fileInput" accept="image/*" hidden>
+        <span>或上传自己的图片（截图 / 生图均可）</span>
+      </label>
+    </section>
+
+    <!-- 2. 主题 -->
+    <section class="card" data-card="2">
+      <h2 class="card-head" data-card="2"><i>2</i>选主题<button type="button" class="card-toggle" aria-label="展开或收起"></button></h2>
+      <div id="themeGrid" class="theme-grid"></div>
+      <div class="field">
+        <label>配色</label>
+        <div id="paletteRow" class="swatches"></div>
+      </div>
+      <div class="field">
+        <label>画面比例</label>
+        <select id="ratio">
+          <option value="3:4">3:4 竖版（1080×1440，小红书图文常用）</option>
+          <option value="4:5">4:5 竖版（1080×1350，信息流占位大）</option>
+          <option value="9:16">9:16 全屏竖版（1080×1920，适合视频封面）</option>
+          <option value="1:1">1:1 方形（1080×1080）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>导出尺寸</label>
+        <select id="exportWidth">
+          <option value="1080">1080 宽（推荐，清晰且体积小）</option>
+          <option value="1440">1440 宽（更清晰，体积大）</option>
+          <option value="720">720 宽（体积最小）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>文字对齐</label>
+        <select id="alignOverride">
+          <option value="auto">跟随主题</option>
+          <option value="left">统一左对齐</option>
+          <option value="center">统一居中</option>
+        </select>
+      </div>
+      <label class="check"><input type="checkbox" id="grain" checked> 添加细微颗粒质感（推荐）</label>
+    </section>
+
+    <!-- 3. 我的评分 -->
+    <section class="card" data-card="3">
+      <h2 class="card-head" data-card="3"><i>3</i>我的评分<button type="button" class="card-toggle" aria-label="展开或收起"></button></h2>
+      <div class="score-row">
+        <input id="userScore" type="number" min="0" max="10" step="0.1" inputmode="decimal" placeholder="7.8">
+        <span class="score-unit">/ 10</span>
+        <button id="btnUseBgm" class="ghost small" title="把 Bangumi 站内评分填进来">用 BGM 评分</button>
+      </div>
+      <input id="scoreRange" type="range" min="0" max="10" step="0.1" value="7.8" class="range">
+      <div class="quick-scores">
+        <button data-score="9.5">9.5</button><button data-score="9.0">9.0</button>
+        <button data-score="8.5">8.5</button><button data-score="8.0">8.0</button>
+        <button data-score="7.5">7.5</button><button data-score="7.0">7.0</button>
+        <button data-score="6.0">6.0</button><button data-score="5.0">5.0</button>
+      </div>
+      <div class="field">
+        <label>评分单位文字（可留空）</label>
+        <input id="scoreUnit" type="text" placeholder="如：分 / 星 / /10" maxlength="8">
+      </div>
+      <label class="check"><input type="checkbox" id="showTier" checked> 显示档位（神作 / 力荐 / 佳作…）</label>
+      <label class="check"><input type="checkbox" id="showBgm" checked> 同时标注 Bangumi 站内评分</label>
+      <label class="check"><input type="checkbox" id="showRank" checked> 显示 Bangumi 排名</label>
+    </section>
+
+    <!-- 4. 文案 -->
+    <section class="card" data-card="4">
+      <h2 class="card-head" data-card="4"><i>4</i>文案<button type="button" class="card-toggle" aria-label="展开或收起"></button></h2>
+      <div class="field">
+        <label>角标文案<span class="tip">左上角那块小标签</span></label>
+        <input id="badge" type="text" placeholder="如：新番速递 / 七月最强 / 补番推荐" maxlength="20">
+        <div class="quick-tags" id="badgePresets"></div>
+      </div>
+      <div class="field">
+        <label>一句吐槽<span class="tip">可换行，最多 3 行</span></label>
+        <textarea id="comment" rows="3" placeholder="如：作画经费全烧在第 8 集了，但剧情真的在硬撑。"></textarea>
+        <div class="counter"><span id="commentCount">0</span>/90</div>
+      </div>
+      <label class="check"><input type="checkbox" id="showTitle" checked> 显示番剧标题</label>
+      <label class="check"><input type="checkbox" id="showMeta" checked> 显示条目信息（原名 / 年份 / 集数 / 制作）</label>
+      <label class="check"><input type="checkbox" id="showTags" checked> 信息里包含标签</label>
+      <label class="check"><input type="checkbox" id="showComment" checked> 显示吐槽文字</label>
+    </section>
+
+    <!-- 5. 署名 -->
+    <section class="card" data-card="5">
+      <h2 class="card-head" data-card="5"><i>5</i>署名与页脚<button type="button" class="card-toggle" aria-label="展开或收起"></button></h2>
+      <label class="check"><input type="checkbox" id="watermark" checked> 显示小红书号水印</label>
+      <input id="xhsId" type="text" placeholder="@你的小红书号" maxlength="24">
+      <div class="field">
+        <label>自定义页脚<span class="tip">填了就替代默认页脚</span></label>
+        <input id="footerCustom" type="text" placeholder="如：每周三更新 · 番剧吐槽" maxlength="30">
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>重置</h2>
+      <button id="btnReset" class="ghost wide">恢复默认设置</button>
+    </section>
+
+    <p class="credit">
+      海报与条目数据来自 <a href="https://bgm.tv" target="_blank" rel="noopener">Bangumi 番组计划</a>。
+      本工具不存储任何图片，全部在你的浏览器本地处理。<br>
+      bgm.tv 在国内需要代理才能访问，搜不到番时请检查代理。
+    </p>
+  </aside>
+
+  <!-- ============ 右栏：预览 ============ -->
+  <section class="stage">
+    <div class="stage-head">
+      <div class="stage-title">
+        <strong>预览</strong>
+        <span id="canvasSize">1080 × 1440</span>
+      </div>
+      <div class="stage-actions">
+        <button id="btnFit" class="ghost small" title="缩放预览">适应窗口</button>
+        <button id="btnExport" class="primary">下载 PNG</button>
+      </div>
+    </div>
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="canvas" width="1080" height="1440"></canvas>
+      <div id="skeleton" class="skeleton">
+        <div class="sk-inner">
+          <div class="sk-poster"></div>
+          <div class="sk-line w70"></div>
+          <div class="sk-line w45"></div>
+        </div>
+        <p>搜一部番，或者上传一张海报图开始</p>
+      </div>
+    </div>
+    <p class="stage-foot" id="stageMsg"></p>
+    <p class="mobile-bar-spacer"></p>
+  </section>
+</main>
+
+<!-- 手机端悬浮操作条 -->
+<div class="mobile-bar">
+  <button id="btnPanel" class="ghost">⚙︎ 设置</button>
+  <button id="btnExportM" class="primary">下载 PNG</button>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<details class="help">
+  <summary>使用说明 / 常见问题</summary>
+  <div class="help-body">
+    <h3>三步出一张图</h3>
+    <ol>
+      <li>搜番名 → 点搜索结果，标题、年份、评分、海报自动填好</li>
+      <li>选主题和配色，填你自己的评分与角标文案</li>
+      <li>点「下载 PNG」保存到相册，直接发小红书</li>
+    </ol>
+    <h3>说明</h3>
+    <ul>
+      <li>图片和文字全部在浏览器本地生成，不会上传到任何服务器。</li>
+      <li>海报取自 Bangumi 官方接口，为适配画布跨域导出，取的是 <code>/r/800/</code> 缩放图（长边不超过 800px）。</li>
+      <li>想换图可以直接上传自己的截图或生图，效果一样。</li>
+      <li>设置会自动记住，下次打开还是你上次的样子。</li>
+    </ul>
+  </div>
+</details>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

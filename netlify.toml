@@ -1,0 +1,18 @@
+# 让 Netlify / Cloudflare Pages 明确知道这是纯静态站，不需要构建
+
+[build]
+  publish = "."
+
+# 不执行任何构建命令：仓库本身就是成品
+command = ""
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"

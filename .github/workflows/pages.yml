@@ -1,0 +1,52 @@
+# ===========================================================
+# 部署到 GitHub Pages
+# 只发布站点运行真正需要的文件（不含 tools/ docs/ 等开发文件），
+# 所以线上体积约 1.3 MB，而不是仓库的 30+ MB。
+# ===========================================================
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 准备站点文件
+        run: |
+          mkdir -p _site
+          cp index.html styles.css .nojekyll _site/
+          cp -r js fonts _site/
+          # favicon 之类如需再加
+          echo "站点文件："
+          find _site -type f | wc -l
+          du -sh _site
+
+      - name: 配置 Pages
+        uses: actions/configure-pages@v5
+
+      - name: 打包上传
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: 发布
+        id: deployment
+        uses: actions/deploy-pages@v4

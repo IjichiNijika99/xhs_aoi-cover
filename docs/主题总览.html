@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>主题总览 · 番剧封面工坊</title>
+<style>
+  :root { --ink:#1B1E27; --ink2:#5A6172; --ink3:#8B93A6; --line:#E3E5EC; --bg:#F1F2F6; --accent:#4F46E5; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:28px 20px 60px; background:var(--bg); color:var(--ink);
+    font-family:"MiSans","HarmonyOS Sans SC","PingFang SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif; }
+  header { max-width:1400px; margin:0 auto 26px; }
+  h1 { margin:0 0 6px; font-size:23px; }
+  header p { margin:0; color:var(--ink2); font-size:14px; line-height:1.7; }
+  header a { color:var(--accent); }
+  .grid { max-width:1400px; margin:0 auto; display:grid; gap:22px;
+    grid-template-columns:repeat(auto-fill, minmax(238px, 1fr)); }
+  .card { margin:0; background:#fff; border:1px solid var(--line); border-radius:14px;
+    overflow:hidden; box-shadow:0 1px 2px rgba(20,24,40,.04), 0 8px 24px -12px rgba(20,24,40,.12); }
+  .card img { display:block; width:100%; height:auto; background:#EDEFF4; }
+  figcaption { padding:11px 13px 14px; }
+  figcaption strong { display:block; font-size:14.5px; margin-bottom:3px; }
+  figcaption span { display:block; font-size:12px; color:var(--ink3); line-height:1.55; }
+  .note { max-width:1400px; margin:30px auto 0; padding:15px 18px; background:#fff;
+    border:1px solid var(--line); border-radius:14px; font-size:13px; color:var(--ink2); line-height:1.8; }
+  .note code { background:#EEEDFD; padding:1px 5px; border-radius:4px; color:var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>主题总览（8 套）</h1>
+  <p>示例条目：<strong>葬送的芙莉莲</strong>（Bangumi #400602）· 我的评分 8.7 · Bangumi 站内 8.5 · 角标「新番速递」<br>
+  同一张海报、同一段文案，只换主题得到的 8 种结果。全部 1080 × 1440，可直接发小红书。</p>
+</header>
+<div class="grid">
+    <figure class="card">
+      <img src="themes/magazine.png" alt="杂志编辑 主题示例" loading="lazy">
+      <figcaption>
+        <strong>杂志编辑</strong>
+        <span>米白纸底 + 巨大数字 + 编辑排版，像动画杂志内页</span>
+      </figcaption>
+    </figure>
+    <figure class="card">
+      <img src="themes/impact.png" alt="热血冲击 主题示例" loading="lazy">
+      <figcaption>
+        <strong>热血冲击</strong>
+        <span>深底 + 超大字 + 斜切色块与速度线，适合高能吐槽</span>
+      </figcaption>
+    </figure>
+    <figure class="card">
+      <img src="themes/neon.png" alt="霓虹赛博 主题示例" loading="lazy">
+      <figcaption>
+        <strong>霓虹赛博</strong>
+        <span>深紫黑 + 青粉霓虹描边 + 网格扫描线，夜间刷番氛围</span>
+      </figcaption>
+    </figure>
+    <figure class="card">
+      <img src="themes/minimal.png" alt="极简通风 主题示例" loading="lazy">
+      <figcaption>
+        <strong>极简通风</strong>
+        <span>大留白 + 细线分组 + 小字号，安静克制的高级感</span>
+      </figcaption>
+    </figure>
+    <figure class="card">
+      <img src="themes/film.png" alt="胶片放映 主题示例" loading="lazy">
+      <figcaption>
+        <strong>胶片放映</strong>
+        <span>暖褐调 + 齿孔边框 + 日期戳，老片重映的怀旧感</span>
+      </figcaption>
+    </figure>
+    <figure class="card">
+      <img src="themes/glass.png" alt="玻璃卡片 主题示例" loading="lazy">
+      <figcaption>
+        <strong>玻璃卡片</strong>
+        <span>海报模糊铺满 + 毛玻璃信息卡，现代 App 界面质感</span>
+      </figcaption>
+    </figure>
+    <figure class="card">
+      <img src="themes/paper.png" alt="黑白报纸 主题示例" loading="lazy">
+      <figcaption>
+        <strong>黑白报纸</strong>
+        <span>纯黑白 + 衬线字 + 分栏细线，像一篇严肃的动画评论</span>
+      </figcaption>
+    </figure>
+    <figure class="card">
+      <img src="themes/wa.png" alt="和风斜纹 主题示例" loading="lazy">
+      <figcaption>
+        <strong>和风斜纹</strong>
+        <span>藏青底 + 朱红印章 + 斜纹，日式番剧介绍页</span>
+      </figcaption>
+    </figure>
+</div>
+<p class="note">
+  实际使用时，每套主题还能再换 <strong>12 种配色</strong>，并可切换 3:4 / 4:5 / 9:16 / 1:1 四种比例与 720 / 1080 / 1440 三种导出宽度。<br>
+  除主题外，评分、角标文案、吐槽短句、署名与页脚都可以自由填写。
+</p>
+</body>
+</html>
