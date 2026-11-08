@@ -102,11 +102,40 @@ await evalJs(`(() => {
   b.value = '冷门神作'; b.dispatchEvent(new Event('input', {bubbles:true}));
   const c = document.getElementById('comment');
   c.value = '分镜和音乐的配合太顶了，看完立刻单曲循环。'; c.dispatchEvent(new Event('input', {bubbles:true}));
-  document.querySelector('.theme-chip[data-theme="impact"]').click();
+  document.querySelector('.theme-chip[data-theme="summit"]').click();
   return 1; })()`);
 await sleep(1200);
 const applied = await evalJs(`(() => { const o = window.__studio.state.opts; return { score: o.userScore, badge: o.badge, theme: o.theme, palette: o.palette }; })()`);
-check('选项已生效', applied.score === 9.2 && applied.badge === '冷门神作' && applied.theme === 'impact', JSON.stringify(applied));
+check('选项已生效', applied.score === 9.2 && applied.badge === '冷门神作' && applied.theme === 'summit', JSON.stringify(applied));
+
+/* ---------- 3b. 山岳选择器 ---------- */
+console.log('\n[3b] 选一座山（坐标/海拔要跟着变）');
+const mtnCount = await evalJs(`document.querySelectorAll('#mountainGrid .mtn-chip').length`);
+check('山岳选择器已渲染', mtnCount >= 8, `${mtnCount} 座可选`);
+
+const mtnSwitch = await evalJs(`(() => {
+  const chips = [...document.querySelectorAll('#mountainGrid .mtn-chip')];
+  const pick = chips.find(c => c.dataset.mountain === 'fuji') || chips[1];
+  const before = window.__studio.state.opts.mountain;
+  pick.click();
+  const after = window.__studio.state.opts.mountain;
+  return { before, after, activeLabel: document.querySelector('#mountainGrid .mtn-chip.active .m-name')?.textContent || '',
+           note: document.getElementById('mountainNote').textContent };
+})()`);
+check('点击山岳后状态切换', mtnSwitch.after !== mtnSwitch.before, `${mtnSwitch.before} → ${mtnSwitch.after}`);
+check('选中态与说明文字同步', /富士山|^\S/.test(mtnSwitch.note) && mtnSwitch.activeLabel.length > 0,
+  `${mtnSwitch.activeLabel.trim()} / ${mtnSwitch.note.slice(0, 40)}`);
+
+const mtnToggle = await evalJs(`(() => {
+  const cb = document.getElementById('showMountain');
+  cb.checked = false; cb.dispatchEvent(new Event('change', {bubbles:true}));
+  const off = window.__studio.state.opts.showMountain;
+  cb.checked = true; cb.dispatchEvent(new Event('change', {bubbles:true}));
+  const on = window.__studio.state.opts.showMountain;
+  return { off, on };
+})()`);
+check('可开关「显示山名/海拔/坐标」', mtnToggle.off === false && mtnToggle.on === true, JSON.stringify(mtnToggle));
+await sleep(600);
 
 /* ---------- 4. 真实点击下载 ---------- */
 console.log('\n[4] 点「下载 PNG」');
@@ -128,7 +157,7 @@ if (files.length) {
   const w = buf.readUInt32BE(16), h = buf.readUInt32BE(20);
   check('导出尺寸 = 1080x1440', w === 1080 && h === 1440, `${w}x${h}`);
   const scoreInName = /9\.2/.test(files[0]);
-  check('文件名含评分与主题', scoreInName && /热血冲击/.test(files[0]), files[0]);
+  check('文件名含评分与主题', scoreInName && /登顶/.test(files[0]), files[0]);
 }
 
 /* ---------- 5. 跨域污染检测 ---------- */

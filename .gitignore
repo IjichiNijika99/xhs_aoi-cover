@@ -10,3 +10,6 @@ desktop.ini
 .vscode/
 .idea/
 *.log
+
+# 调研时的抓取缓存
+_yama/

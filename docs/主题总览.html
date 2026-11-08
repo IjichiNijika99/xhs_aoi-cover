@@ -11,96 +11,84 @@
     font-family:"MiSans","HarmonyOS Sans SC","PingFang SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif; }
   header { max-width:1400px; margin:0 auto 26px; }
   h1 { margin:0 0 6px; font-size:23px; }
-  header p { margin:0; color:var(--ink2); font-size:14px; line-height:1.7; }
+  header p { margin:0; color:var(--ink2); font-size:14px; line-height:1.75; }
   header a { color:var(--accent); }
   .grid { max-width:1400px; margin:0 auto; display:grid; gap:22px;
-    grid-template-columns:repeat(auto-fill, minmax(238px, 1fr)); }
+    grid-template-columns:repeat(auto-fill, minmax(258px, 1fr)); }
   .card { margin:0; background:#fff; border:1px solid var(--line); border-radius:14px;
     overflow:hidden; box-shadow:0 1px 2px rgba(20,24,40,.04), 0 8px 24px -12px rgba(20,24,40,.12); }
   .card img { display:block; width:100%; height:auto; background:#EDEFF4; }
   figcaption { padding:11px 13px 14px; }
   figcaption strong { display:block; font-size:14.5px; margin-bottom:3px; }
   figcaption span { display:block; font-size:12px; color:var(--ink3); line-height:1.55; }
-  .note { max-width:1400px; margin:30px auto 0; padding:15px 18px; background:#fff;
-    border:1px solid var(--line); border-radius:14px; font-size:13px; color:var(--ink2); line-height:1.8; }
+  .note { max-width:1400px; margin:30px auto 0; padding:16px 20px; background:#fff;
+    border:1px solid var(--line); border-radius:14px; font-size:13px; color:var(--ink2); line-height:1.85; }
   .note code { background:#EEEDFD; padding:1px 5px; border-radius:4px; color:var(--accent); }
+  .note h3 { margin:0 0 8px; font-size:14px; color:var(--ink); }
+  .mtn { display:inline-block; margin:2px 6px 2px 0; padding:2px 9px; border-radius:99px;
+    background:#F1F2F6; font-size:12px; color:var(--ink2); }
 </style>
 </head>
 <body>
 <header>
-  <h1>主题总览（9 套）</h1>
-  <p>示例条目：<strong>葬送的芙莉莲</strong>（Bangumi #400602）· 我的评分 8.7 · Bangumi 站内 8.5 · 角标「新番速递」<br>
-  同一张海报、同一段文案，只换主题得到的 9 种结果。全部 1080 × 1440，可直接发小红书。</p>
+  <h1>主题总览（5 套 · 山岳系列）</h1>
+  <p>示例条目：<strong>葬送的芙莉莲</strong>（Bangumi #400602）· 我的评分 8.7 · Bangumi 站内 8.5 · 角标「新番速递」· 山：高尾山<br>
+  这一族主题的共同点是<strong>海报是主角</strong>：满幅铺满或大块占据，标题与评分直接叠压在图上；
+  每张图都会印一座《向山进发》里真实出现过的山的<strong>海拔与经纬度</strong>。</p>
 </header>
 <div class="grid">
     <figure class="card">
-      <img src="themes/aoi.png" alt="雪村葵 主题示例" loading="lazy">
+      <img src="themes/sunset.png" alt="日落饭能 主题示例" loading="lazy">
       <figcaption>
-        <strong>雪村葵 ★ 专属</strong>
-        <span>海报铺满整张画面、文字直接叠压在图上；斜角角标 + 山系等高线，向山进发的要素藏在细节里</span>
+        <strong>日落饭能</strong>
+        <span>海报满铺整张画面，右上圆形山章写着海拔与山名，底部一条山脊剪影压住画面下缘</span>
       </figcaption>
     </figure>
     <figure class="card">
-      <img src="themes/magazine.png" alt="杂志编辑 主题示例" loading="lazy">
+      <img src="themes/summit.png" alt="登顶 主题示例" loading="lazy">
       <figcaption>
-        <strong>杂志编辑</strong>
-        <span>米白纸底 + 巨大数字 + 编辑排版，像动画杂志内页</span>
+        <strong>登顶</strong>
+        <span>巨幅海拔数字占据画面上半，像山顶的标高柱；日出撞色，气势最足</span>
       </figcaption>
     </figure>
     <figure class="card">
-      <img src="themes/impact.png" alt="热血冲击 主题示例" loading="lazy">
+      <img src="themes/trail.png" alt="路线笔记 主题示例" loading="lazy">
       <figcaption>
-        <strong>热血冲击</strong>
-        <span>深底 + 超大字 + 斜切色块与速度线，适合高能吐槽</span>
+        <strong>路线笔记</strong>
+        <span>浅色纸感，海报像贴在手记上的照片，左侧有进度刻度、右下有手绘山顶线稿</span>
       </figcaption>
     </figure>
     <figure class="card">
-      <img src="themes/neon.png" alt="霓虹赛博 主题示例" loading="lazy">
+      <img src="themes/night.png" alt="夜行 主题示例" loading="lazy">
       <figcaption>
-        <strong>霓虹赛博</strong>
-        <span>深紫黑 + 青粉霓虹描边 + 网格扫描线，夜间刷番氛围</span>
+        <strong>夜行</strong>
+        <span>深蓝星夜与月牙，信息区上方一条发光稜线；海报被夜色压暗，适合夜间登山的片子</span>
       </figcaption>
     </figure>
     <figure class="card">
-      <img src="themes/minimal.png" alt="极简通风 主题示例" loading="lazy">
+      <img src="themes/journal.png" alt="山岳手帐 主题示例" loading="lazy">
       <figcaption>
-        <strong>极简通风</strong>
-        <span>大留白 + 细线分组 + 小字号，安静克制的高级感</span>
-      </figcaption>
-    </figure>
-    <figure class="card">
-      <img src="themes/film.png" alt="胶片放映 主题示例" loading="lazy">
-      <figcaption>
-        <strong>胶片放映</strong>
-        <span>暖褐调 + 齿孔边框 + 日期戳，老片重映的怀旧感</span>
-      </figcaption>
-    </figure>
-    <figure class="card">
-      <img src="themes/glass.png" alt="玻璃卡片 主题示例" loading="lazy">
-      <figcaption>
-        <strong>玻璃卡片</strong>
-        <span>海报模糊铺满 + 毛玻璃信息卡，现代 App 界面质感</span>
-      </figcaption>
-    </figure>
-    <figure class="card">
-      <img src="themes/paper.png" alt="黑白报纸 主题示例" loading="lazy">
-      <figcaption>
-        <strong>黑白报纸</strong>
-        <span>纯黑白 + 衬线字 + 分栏细线，像一篇严肃的动画评论</span>
-      </figcaption>
-    </figure>
-    <figure class="card">
-      <img src="themes/wa.png" alt="和风斜纹 主题示例" loading="lazy">
-      <figcaption>
-        <strong>和风斜纹</strong>
-        <span>藏青底 + 朱红印章 + 斜纹，日式番剧介绍页</span>
+        <strong>山岳手帐</strong>
+        <span>明信片版式：左侧竖幅海报，右侧文字栏，最下方一枚「山岳铭牌」像盖章</span>
       </figcaption>
     </figure>
 </div>
-<p class="note">
-  实际使用时，每套主题还能再换 <strong>12 种配色</strong>，并可切换 3:4 / 4:5 / 9:16 / 1:1 四种比例与 720 / 1080 / 1440 三种导出宽度。<br>
-  除主题外，评分、角标文案、吐槽短句、署名与页脚都可以自由填写。<br>
-  在线使用：<a href="https://ijichinijika99.github.io/xhs_aoi-cover/" target="_blank" rel="noopener">https://ijichinijika99.github.io/xhs_aoi-cover/</a>
-</p>
+<div class="note">
+  <h3>可选的 19 座山</h3>
+  <p>海拔与经纬度都按日本国土地理院数据核对过，选哪座，图上印的就是哪座：</p>
+  <p>
+    <span class="mtn">高尾山 599m</span><span class="mtn">富士山 3,776m</span><span class="mtn">谷川岳 1,977m</span>
+    <span class="mtn">天览山 197m</span><span class="mtn">多峯主山 271m</span><span class="mtn">天觉山 445m</span>
+    <span class="mtn">大高山 493m</span><span class="mtn">日和田山 305m</span><span class="mtn">子之权现 640m</span>
+    <span class="mtn">关八州见晴台 770m</span><span class="mtn">武甲山 1,304m</span><span class="mtn">筑波山 877m</span>
+    <span class="mtn">御岳山 929m</span><span class="mtn">大平山 159m</span><span class="mtn">三ツ峠山 1,785m</span>
+    <span class="mtn">雾峰 1,925m</span><span class="mtn">瑞墙山 2,230m</span><span class="mtn">金峰山 2,599m</span>
+    <span class="mtn">赤城山 1,674m</span>
+  </p>
+  <p style="margin-top:14px">
+    每套主题还能再换 <strong>8 套山色配色</strong>，并可切换 3:4 / 4:5 / 9:16 / 1:1 四种比例与 720 / 1080 / 1440 三种导出宽度。<br>
+    在线使用：<a href="https://ijichinijika99.github.io/xhs_aoi-cover/" target="_blank" rel="noopener">https://ijichinijika99.github.io/xhs_aoi-cover/</a>
+  </p>
+</div>
 </body>
 </html>

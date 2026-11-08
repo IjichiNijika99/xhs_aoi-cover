@@ -4,14 +4,17 @@
 
 import { searchAnime, getSubject, loadPoster, loadImage, pickImage } from './bgm.js';
 import { THEMES, PALETTES, paletteById, themeById, renderTheme, canvasToBlob, isLightPalette } from './themes.js';
+import { MOUNTAIN_OPTIONS, MOUNTAIN_GROUPS, mountainById, formatCoords, formatElev } from './mountains.js';
 
 const $ = id => document.getElementById(id);
-const LS_KEY = 'xhs-cover-studio-v2';
+const LS_KEY = 'xhs-cover-studio-v3';
 
 /* ---------- 默认设置 ---------- */
 const DEFAULTS = {
-  theme: 'aoi',
+  theme: 'sunset',
   palette: '',          // 空 = 跟随主题默认配色
+  mountain: 'takao',    // 默认高尾山：作品里第一次真正登山的那座
+  showMountain: true,
   ratio: '3:4',
   exportWidth: 1080,
   alignOverride: 'auto',
@@ -82,6 +85,7 @@ function boot() {
   buildThemeGrid();
   buildPaletteRow();
   buildBadgePresets();
+  buildMountainGrid();
   setupAccordion();
   bindEvents();
   syncInputsFromState();
@@ -126,9 +130,12 @@ function updateCardSummaries() {
   };
   set('1', name ? `《${name}》` : '未选择');
   set('2', `${themeById(o.theme).name}${o.palette ? ' · ' + paletteById(o.palette).name : ''}`);
-  set('3', o.userScore === '' ? '未设置' : `${Number(o.userScore).toFixed(1)} 分` + (o.badge ? '' : ''));
-  set('4', [o.badge, o.comment ? '已写吐槽' : ''].filter(Boolean).join(' · ') || '未填写');
-  set('5', o.footerCustom || (o.watermark ? o.xhsId : '无署名') || '无署名');
+  const mt = mountainById(o.mountain);
+  set('3', o.showMountain === false ? '不显示' : `${mt.name} · ${formatElev(mt.elev)}`);
+  set('4', `${o.ratio} · ${o.exportWidth} 宽`);
+  set('5', o.userScore === '' ? '未设置' : `${Number(o.userScore).toFixed(1)} 分`);
+  set('6', [o.badge, o.comment ? '已写吐槽' : ''].filter(Boolean).join(' · ') || '未填写');
+  set('7', o.footerCustom || (o.watermark ? o.xhsId : '无署名') || '无署名');
 }
 function setupAccordion() {
   for (const head of document.querySelectorAll('.card-head')) {
@@ -161,6 +168,9 @@ function loadSettings() {
     }
   } catch { /* 忽略损坏的本地数据 */ }
   if (!state.opts.palette) state.opts.palette = '';
+  // 旧版本存下来的主题 / 山可能在当前版本已不存在，回落成默认值
+  if (!THEMES.some(t => t.id === state.opts.theme)) state.opts.theme = DEFAULTS.theme;
+  if (!MOUNTAIN_OPTIONS.some(m => m.id === state.opts.mountain)) state.opts.mountain = DEFAULTS.mountain;
 }
 
 function saveSettings() {
@@ -205,6 +215,50 @@ function syncThemeUI() {
   for (const b of document.querySelectorAll('.theme-chip')) {
     b.classList.toggle('active', b.dataset.theme === state.opts.theme);
   }
+}
+
+function buildMountainGrid() {
+  const grid = $('mountainGrid');
+  grid.innerHTML = '';
+  // 按分组排：先"原点"（叙事骨架），再饭能一带，最后远处的高山
+  for (const group of MOUNTAIN_GROUPS) {
+    const list = MOUNTAIN_OPTIONS.filter(m => m.group === group);
+    if (!list.length) continue;
+    const label = document.createElement('div');
+    label.className = 'mtn-group';
+    label.textContent = group;
+    grid.appendChild(label);
+
+    for (const m of list) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mtn-chip' + (m.id === state.opts.mountain ? ' active' : '');
+      btn.dataset.mountain = m.id;
+      btn.title = `${m.jp}　${m.elev}m　${m.region}\n${m.ep || ''}\n${m.note || ''}`;
+      btn.innerHTML = `
+        <span class="m-name">${esc(m.name)}<span class="m-elev">${formatElev(m.elev)}</span></span>
+        <span class="m-coord">${esc(formatCoords(m.coords))}</span>`;
+      btn.addEventListener('click', () => {
+        state.opts.mountain = m.id;
+        state.opts.showMountain = true;
+        $('showMountain').checked = true;
+        syncMountainUI();
+        scheduleRender();
+      });
+      grid.appendChild(btn);
+    }
+  }
+  syncMountainUI();
+}
+
+function syncMountainUI() {
+  for (const b of document.querySelectorAll('.mtn-chip')) {
+    b.classList.toggle('active', b.dataset.mountain === state.opts.mountain);
+  }
+  const m = mountainById(state.opts.mountain);
+  $('mountainNote').textContent =
+    `${m.name}（${m.jp}）· ${formatElev(m.elev)} · ${m.region}`
+    + (m.note ? '　—　' + m.note : '');
 }
 
 function buildPaletteRow() {
@@ -281,6 +335,7 @@ function bindEvents() {
   $('exportWidth').addEventListener('change', e => { state.opts.exportWidth = Number(e.target.value); updateCanvasSizeLabel(); scheduleRender(); });
   $('alignOverride').addEventListener('change', e => { state.opts.alignOverride = e.target.value; scheduleRender(); });
   $('grain').addEventListener('change', e => { state.opts.grain = e.target.checked; scheduleRender(); });
+  $('showMountain').addEventListener('change', e => { state.opts.showMountain = e.target.checked; scheduleRender(); });
 
   // 评分
   const scoreEl = $('userScore'), rangeEl = $('scoreRange');
@@ -404,6 +459,8 @@ function syncInputsFromState() {
   $('watermark').checked = o.watermark;
   $('xhsId').value = o.xhsId;
   $('footerCustom').value = o.footerCustom;
+  $('showMountain').checked = o.showMountain !== false;
+  if (o.mountain) syncMountainUI();
 }
 
 /* ===========================================================
