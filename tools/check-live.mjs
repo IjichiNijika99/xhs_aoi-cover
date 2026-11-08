@@ -54,10 +54,30 @@ const hasStudio = await evalJs('typeof window.__studio === "object" && Array.isA
 check('ES 模块加载并执行成功', hasStudio === true, 'window.__studio 已就绪');
 
 const themeCount = hasStudio ? await evalJs('window.__studio.THEMES.length') : 0;
-check('主题数量 = 9', themeCount === 9, `${themeCount} 套`);
+check('主题数量 = 5（山岳系列）', themeCount === 5, `${themeCount} 套`);
 
 const themeIds = hasStudio ? await evalJs('window.__studio.THEMES.map(t=>t.id).join(",")') : '';
-check('专属主题 aoi 已上线', themeIds.includes('aoi'), themeIds);
+check('5 套主题齐全', /sunset/.test(themeIds) && /summit/.test(themeIds) && /trail/.test(themeIds)
+  && /night/.test(themeIds) && /journal/.test(themeIds), themeIds);
+
+// 山岳数据模块是否随站点发布
+// 注意：GitHub Pages 是子路径部署（/xhs_aoi-cover/），
+// 动态 import 必须用相对路径，绝对路径 "/js/..." 会指到域名根目录而 404。
+const mtnInfo = await evalJs(`(async () => {
+  try {
+    const m = await import('./js/mountains.js');
+    const fuji = m.MOUNTAINS.find(x => x.id === 'fuji');
+    return { count: m.MOUNTAINS.length, groups: m.MOUNTAIN_GROUPS.length,
+             fuji: fuji ? m.formatCoords(fuji.coords) + ' ' + m.formatElev(fuji.elev) : '' };
+  } catch (e) { return { err: String(e.message) }; }
+})()`);
+check('山岳数据模块已上线', !mtnInfo.err && mtnInfo.count >= 15,
+  mtnInfo.err ? mtnInfo.err : `${mtnInfo.count} 座 / ${mtnInfo.groups} 组`);
+check('坐标与海拔格式化正确', /35\.36°N 138\.73°E 3,776m/.test(mtnInfo.fuji || ''), mtnInfo.fuji || '');
+
+// 选择器真的渲染出来了
+const chips = await evalJs(`document.querySelectorAll('#mountainGrid .mtn-chip').length`);
+check('山岳选择器已渲染', chips >= 15, `${chips} 个`);
 
 // 字体：得意黑是否真的被解析到
 const fontOk = await evalJs(`(async () => {
